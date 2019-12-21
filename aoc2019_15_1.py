@@ -650,7 +650,7 @@ def repairDroneFindOxegynTank(seedFunction):
 	while opcodeTuple[1] != 99:
 		attemptedDroidLocation = newDroidLocation(droid, lastDir)
 		#print("DEBUG: repairDroneFindOxegynTank: opcodeTuple = {}".format(opcodeTuple))
-		print("Droid at {} and board = {}".format(droid, board))
+		print("Droid at {}, last direction = {}, and board = {}".format(droid, lastDir, board))
 		# Hit Wall Case
 		if opcodeTuple[0] == 0:
 			board[attemptedDroidLocation] = '#'
@@ -662,7 +662,7 @@ def repairDroneFindOxegynTank(seedFunction):
 			board[attemptedDroidLocation] = 'D'
 			lastDroid = droid
 			droid = attemptedDroidLocation
-			lastDir = cycleDir(4)
+			lastDir = cycleDir(lastDir)
 		
 		elif opcodeTuple[0] == 2:
 			board[droid] = ' '
@@ -672,31 +672,41 @@ def repairDroneFindOxegynTank(seedFunction):
 		else:
 			logging.error("Unexpected return code {} from remote droid operation".format(opcodeTuple[1]))
 		
-		if droid[0] > maxX:
-			maxX = droid[0]
-		if droid[0] < minX:
-			minX = droid[0]
-		if droid[1] > maxY:
-			maxY = droid[1]
-		if droid[1] < minY:
-			minY = droid[1]
+		if attemptedDroidLocation[0] > maxX:
+			maxX = attemptedDroidLocation[0]
+		if attemptedDroidLocation[0] < minX:
+			minX = attemptedDroidLocation[0]
+		if attemptedDroidLocation[1] > maxY:
+			maxY = attemptedDroidLocation[1]
+		if attemptedDroidLocation[1] < minY:
+			minY = attemptedDroidLocation[1]
 			
 		sealedSection = opcodeTuple[3]
 		userInput.append(lastDir)
 		opcodeTuple = opcodeAssist(userInput, sealedSection, opcodeTuple[2], opcodeTuple[4], opcodeTuple[5])
+		drawOxygenRoom(board, minX, maxX, minY, maxY)
 	return (board, minX, maxX, minY, maxY)
 	
 def drawOxygenRoom(board, minX, maxX, minY, maxY):
+	print("DEBUG: drawOxygenRoom: minX = {}, maxX = {}, minY = {}, maxY = {}, board = {}".format(minX, maxX, minY, maxY, board))
 	screen = []
-	for y in range(minY, maxY):
+	yInd = 0
+	xInd = 0
+	for y in range(minY, maxY+1):
 		screen.append("")
-		for x in range(minX, maxX):
-			screen[y] = screen[y] + board.get((x, y), '#')
+		for x in range(minX, maxX+1):
+			screen[yInd] = screen[yInd] + board.get((x, y), '?')
+			xInd += 1
+		yInd += 1
+		xInd = 0
 	for s in screen:
 		print(s)
+	print(screen)
 	return screen 
 
-drawOxygenRoom(repairDroneFindOxegynTank(seedInputArray))
+#drawOxygenRoom(repairDroneFindOxegynTank(seedInputArray))
+
+repairDroneFindOxegynTank(seedInputArray)
 
 
 
