@@ -817,6 +817,7 @@ def drawOxygenRoom(board, minX, maxX, minY, maxY):
 	#print(screen)
 	return screen 
 
+# Returns the furthest distance the oxygen needs to travel
 def oxygenate(graph, oxygen):
 	furthestPoint = (0, 0)
 	furthestDist = 0
@@ -825,7 +826,7 @@ def oxygenate(graph, oxygen):
 		if len(path) - 1 > furthestDist:
 			furthestDist = len(path) - 1
 			furthestPoint = k 
-	return furthestDist
+	return furthestDist - 1
 #drawOxygenRoom(repairDroneFindOxegynTank(seedInputArray))
 
 droneTuple = repairDroneFindOxegynTank(seedInputArray)
