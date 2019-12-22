@@ -817,15 +817,24 @@ def drawOxygenRoom(board, minX, maxX, minY, maxY):
 	#print(screen)
 	return screen 
 
+def oxygenate(graph, oxygen):
+	furthestPoint = (0, 0)
+	furthestDist = 0
+	for k in graph.keys():
+		path = djikstraPath(k, oxygen, graph)
+		if len(path) - 1 > furthestDist:
+			furthestDist = len(path) - 1
+			furthestPoint = k 
+	return furthestDist
 #drawOxygenRoom(repairDroneFindOxegynTank(seedInputArray))
 
 droneTuple = repairDroneFindOxegynTank(seedInputArray)
 
 djikstra = buildGraph(droneTuple[0], droneTuple[1], droneTuple[2], droneTuple[3], droneTuple[4])
 
-path = djikstraPath((0, 0), droneTuple[5], djikstra)
-print("DEBUG: length of shortest path = {}, path = {}".format(len(path) - 1, path))
-
+#path = djikstraPath((0, 0), droneTuple[5], djikstra)
+#print("DEBUG: length of shortest path = {}, path = {}".format(len(path) - 1, path))
+print(oxygenate(djikstra, droneTuple[5]))
 
 
 
